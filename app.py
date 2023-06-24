@@ -3,6 +3,7 @@ import json
 from flask import Flask
 from flask import request
 from text_index import TextIndex
+import numpy as np
 
 app = Flask(__name__)
 text_index = TextIndex()
@@ -22,5 +23,6 @@ def create_index():
 @app.get("/closest_vectors")
 def get_keywords():
     xq = request.args.get('xq', '')
+    xq = np.array(xq.split(','))
     k = request.args.get('k', '')
     return text_index.search(xq, k)

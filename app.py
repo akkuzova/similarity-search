@@ -11,7 +11,11 @@ text_index = TextIndex()
 
 @app.post("/index")
 def create_index():
+    print(request.json, '\n')
+    print(request.headers, '\n')
+    print(request.data, '\n')
     vectors = json.load(request.json)
+    print(vectors, '\n')
     text_index.build_index(vectors)
     info = {
         'vector_count': text_index.get_vector_count(),
@@ -22,7 +26,9 @@ def create_index():
 
 @app.get("/closest_vectors")
 def get_keywords():
+    print(request, '\n')
     xq = request.args.get('xq', '')
     xq = np.array(xq.split(','))
+    print(xq, '\n')
     k = request.args.get('k', '')
     return text_index.search(xq, k)

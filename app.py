@@ -22,11 +22,12 @@ def create_index():
     return info
 
 
-@app.get("/closest_vectors")
+@app.post("/closest_vectors")
 def get_keywords():
-    print(request.args, '\n')
-    xq = request.args.get('xq', '')
-    xq = np.array(xq.split(','))
+    print(type(request.json))
+    print(request.json, '\n')
+    xq = np.array(request.json['xq'])
     print(xq, '\n')
-    k = request.args.get('k', '')
-    return text_index.search(xq, k)
+    k = request.json['k']
+    distances, neighbors = text_index.search(xq, k)
+    return {'distances': distances.tolist(), 'neighbors': neighbors.tolist()}

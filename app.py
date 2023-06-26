@@ -24,7 +24,7 @@ def create_index():
 
 @app.get("/closest_vectors")
 def get_keywords():
-    print(request, '\n')
+    print(request.args, '\n')
     xq = request.args.get('xq', '')
     xq = np.array(xq.split(','))
     print(xq, '\n')

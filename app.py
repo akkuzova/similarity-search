@@ -12,9 +12,7 @@ text_index = TextIndex()
 @app.post("/index")
 def create_index():
     print(request.json, '\n')
-    print(request.headers, '\n')
-    print(request.data, '\n')
-    vectors = json.load(request.json)
+    vectors = request.json
     print(vectors, '\n')
     text_index.build_index(vectors)
     info = {

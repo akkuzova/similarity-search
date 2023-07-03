@@ -1,33 +1,21 @@
-import json
-
 from flask import Flask
 from flask import request
-from text_index import TextIndex
-import numpy as np
+from controller import Controller
 
 app = Flask(__name__)
-text_index = TextIndex()
+controller = Controller()
 
 
-@app.post("/index")
-def create_index():
-    print(request.json, '\n')
-    vectors = request.json
-    print(vectors, '\n')
-    text_index.build_index(vectors)
-    info = {
-        'vector_count': text_index.get_vector_count(),
-        'dimension': text_index.get_vector_dimension()
-    }
-    return info
+@app.get('/index/<index_id>')
+def get_index_info(index_id):
+    return controller.get_index_info(index_id)
 
 
-@app.post("/closest_vectors")
-def get_keywords():
-    print(type(request.json))
-    print(request.json, '\n')
-    xq = np.array(request.json['xq'])
-    print(xq, '\n')
-    k = request.json['k']
-    distances, neighbors = text_index.search(xq, k)
-    return {'distances': distances.tolist(), 'neighbors': neighbors.tolist()}
+@app.post("/index/<index_id>")
+def create_index(index_id):
+    return controller.create_index(index_id, request.json)
+
+
+@app.post("/search/<index_id>")
+def search(index_id):
+    return controller.search(index_id, request.json)

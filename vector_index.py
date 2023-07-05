@@ -1,8 +1,9 @@
 import faiss
 import numpy as np
 from typing import List
+import os
 
-INDEX_TYPE = "IDMap,IVF2,Flat"
+INDEX_TYPE = "IDMap,IVF1,Flat"
 INDEX_DATA_FOLDER = './index_data/'
 
 
@@ -10,6 +11,8 @@ class VectorIndex:
     def __init__(self, index_id: str):
         self._index_id = index_id
         self._index = None
+        if not os.path.exists(INDEX_DATA_FOLDER):
+            os.makedirs(INDEX_DATA_FOLDER)
 
     def get_vector_count(self) -> int:
         return self._index.ntotal if self._index else None

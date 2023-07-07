@@ -38,8 +38,11 @@ class IndexManager:
         xq = np.array(xq)
         index = self._get_index(index_id)
 
-        distances, neighbors = index.search(xq, k)
-        return {'distances': distances.tolist()[0], 'neighbors': neighbors.tolist()[0]}
+        if index is not None:
+            distances, neighbors = index.search(xq, k)
+            return {'distances': distances.tolist()[0], 'neighbors': neighbors.tolist()[0]}
+        else:
+            return {'distances': [], 'neighbors': []}
 
     def create_index(self, vectors, index_id) -> dict:
         index = VectorIndex(index_id).build(vectors)

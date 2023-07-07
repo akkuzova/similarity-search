@@ -20,5 +20,5 @@ def create_index(index_id):
 
 @app.post("/search/<index_id>")
 def search(index_id):
-    print(index_id, len(request.json))
+    print(index_id, request.json)
     return controller.search(index_id, request.json)

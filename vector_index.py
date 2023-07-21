@@ -1,18 +1,17 @@
 import faiss
 import numpy as np
 from typing import List
-import os
+
+from file_manager import FileManager
 
 INDEX_TYPE = "IDMap,IVF1,Flat"
-INDEX_DATA_FOLDER = './index_data/'
 
 
 class VectorIndex:
     def __init__(self, index_id: str):
         self._index_id = index_id
         self._index = None
-        if not os.path.exists(INDEX_DATA_FOLDER):
-            os.makedirs(INDEX_DATA_FOLDER)
+        self._file_manager = FileManager()
 
     def get_vector_count(self) -> int:
         return self._index.ntotal if self._index else None
@@ -50,12 +49,13 @@ class VectorIndex:
         self._index.train(_vectors)
         self._index.add_with_ids(_vectors, _ids)
 
-        faiss.write_index(self._index, f'{INDEX_DATA_FOLDER}{self._index_id}.index')
+        faiss.write_index(self._index, self._file_manager.get_index_path(self._index_id))
+        self._file_manager.upload_index(self._index_id)
         return self
 
     def load(self):
-        filename = f'{INDEX_DATA_FOLDER}{self._index_id}.index'
-        self._index = faiss.read_index(filename)
+        self._file_manager.download_index(self._index_id)
+        self._index = faiss.read_index(self._file_manager.get_index_path(self._index_id))
         return self
 
     def search(self, xq, k: int) -> (List, List):

@@ -1,12 +1,16 @@
-from vector_index import VectorIndex, INDEX_DATA_FOLDER
+from vector_index import VectorIndex
 import re
 import glob
 import numpy as np
 from typing import List
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 
 class IndexManager:
-    _file_name_pattern = f'{INDEX_DATA_FOLDER}*.index'
+    _file_name_pattern = f'{os.getenv("INDEX_DATA_FOLDER")}*.index'
     _indexes = {}
 
     def __init__(self):

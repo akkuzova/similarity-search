@@ -19,6 +19,9 @@ class FileManager:
 
         self.bucket = s3.Bucket(self.s3_bucket_name)
 
+        if not os.path.exists(self.prefix):
+            os.makedirs(self.prefix)
+
     def download_indexes(self):
         for obj in self.bucket.objects.filter(Prefix=self.prefix):
 
@@ -28,9 +31,6 @@ class FileManager:
             if not os.path.exists(os.path.dirname(obj.key)):
                 os.makedirs(os.path.dirname(obj.key))
             self.bucket.download_file(obj.key, obj.key)
-
-        if not os.path.exists(self.prefix):
-            os.makedirs(self.prefix)
 
     def download_index(self, index_id):
         path = self.get_index_path(index_id)
@@ -43,7 +43,6 @@ class FileManager:
 
     def get_index_path(self, index_id):
         return f'{self.prefix}{index_id}.index'
-
 
     def upload_index(self, index_id):
         path = self.get_index_path(index_id)
